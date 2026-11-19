@@ -1,77 +1,88 @@
-Buscador de Perfis do GitHub
-📌 Descrição do Projeto
+# Buscador de perfis do GitHub
 
-Este projeto é um Buscador de Perfis do GitHub desenvolvido com HTML, CSS e JavaScript. Ele permite que qualquer usuário pesquise perfis do GitHub e visualize informações importantes como avatar, nome, login, biografia, número de repositórios públicos, seguidores e seguindo.
+Encontre um usuário do GitHub pelo login ou pelo nome, veja o perfil completo e os repositórios dele, leia o código direto no navegador e baixe o projeto em ZIP.
 
-O design é moderno, responsivo e interativo, destacando informações do usuário com efeitos visuais atrativos e feedback em tempo real durante a busca.
+Este é o primeiro módulo de um sistema maior: a **correção automática de listas de lógica de programação** (em qualquer linguagem) a partir do enunciado. Aqui fica a parte de localizar o aluno e chegar até o código que vai ser avaliado.
 
-🎯 Funcionalidades
+**Acesse:** https://gregorykz.github.io/buscador-perfil-github/
 
-Pesquisa de qualquer usuário do GitHub através do nome de usuário.
+## O que ele faz
 
-Exibição de informações essenciais do perfil:
+**Busca**
+- Por login (`gregorykz`), pelo endereço inteiro (`github.com/gregorykz`) ou pelo nome da pessoa, com sugestões enquanto você digita.
+- Se o login não existir, mostra perfis com nome parecido.
+- Guarda os perfis vistos recentemente na página inicial.
 
-Avatar
+**Perfil**
+- Foto, nome, login, bio, empresa, localização, site, e-mail, X/Twitter e data de entrada no GitHub.
+- Repositórios, seguidores, seguindo e total de estrelas recebidas.
+- Linguagens mais usadas, organizações e atividade recente (commits, repositórios criados etc.).
 
-Nome e login
+**Repositórios**
+- Lista completa (até 500), com filtro por texto, por linguagem, ordenação e opção de esconder forks.
+- Botão para baixar qualquer repositório em ZIP direto da lista.
 
-Biografia
+**Código**
+- Árvore de arquivos navegável, com filtro por nome.
+- Código com realce de sintaxe e números de linha. Clique em um número para marcar a linha; Shift + clique marca um trecho. O link fica na barra de endereço (`?line=11-15`), pronto para compartilhar ou usar na correção.
+- README e arquivos Markdown renderizados, notebooks Jupyter (`.ipynb`) com células e saídas, imagens.
+- Copiar o arquivo, baixar o arquivo, baixar o repositório em ZIP, copiar o comando `git clone`, trocar de branch.
 
-Número de repositórios públicos
+Todas as telas têm endereço próprio, então dá para salvar ou mandar o link de um perfil, repositório ou arquivo:
 
-Seguidores e seguindo
+```
+#/gregorykz
+#/gregorykz/buscador-perfil-github
+#/gregorykz/buscador-perfil-github/assets/js/api.js?line=40-60
+#/gregorykz/projeto?ref=dev
+```
 
-Feedback visual durante o carregamento e em caso de erro (usuário não encontrado).
+## Limite de consultas e token
 
-Layout responsivo, adaptável para desktop e dispositivos móveis.
+Sem login, a API do GitHub permite **60 consultas por hora** por rede. O número restante aparece no topo da página. Para corrigir uma turma inteira, crie um [token clássico sem nenhuma permissão](https://github.com/settings/tokens/new?description=Buscador%20de%20perfis) e cole em **Token**: o limite sobe para 5.000 por hora. O token fica salvo só no seu navegador.
 
-Estilo moderno com efeito neon no avatar e cartões de perfil.
+Ler o conteúdo dos arquivos não gasta consultas (vem de `raw.githubusercontent.com`), e as respostas ficam em cache enquanto a página está aberta.
 
-🛠 Tecnologias Utilizadas
+## Estrutura
 
-HTML5: Estrutura da aplicação
+```
+index.html
+assets/
+├─ css/style.css          visual da página e tema de cores do código
+├─ js/
+│  ├─ app.js              rotas (#/login/repo/caminho), barra do topo, token
+│  ├─ api.js              toda a comunicação com o GitHub (cache, limite, erros)
+│  ├─ search.js           campo de busca com sugestões
+│  ├─ ui.js               HTML seguro, formatação, ícones, avisos
+│  ├─ langs.js            cores das linguagens e detecção para o realce
+│  └─ views/
+│     ├─ home.js          página inicial
+│     ├─ profile.js       perfil e lista de repositórios
+│     └─ repo.js          repositório, árvore de arquivos e visualizador
+├─ fonts/                 Schibsted Grotesk e JetBrains Mono
+└─ vendor/                highlight.js, marked e DOMPurify (sem CDN)
+```
 
-CSS3: Layout, cores, animações e efeitos visuais
+`api.js` não depende da interface. Funções como `getRepos`, `getTree` e `getFileText` podem ser importadas pelo módulo de correção automática para buscar o código dos alunos.
 
-JavaScript: Consumo da GitHub API, manipulação do DOM e interatividade
+## Como rodar localmente
 
-⚙️ Estrutura do Projeto
-Buscador-GitHub/
-├─ index.html              # Página principal com o buscador
-├─ assets/
-│  ├─ style.css            # Estilos da página
-│  └─ script.js            # Lógica do buscador e integração com API
-├─ README.md               # Documentação do projeto
+Os scripts usam módulos JavaScript, então o arquivo precisa ser servido por HTTP (abrir o `index.html` com duplo clique não funciona):
 
-🚀 Como usar
+```bash
+git clone https://github.com/gregorykz/buscador-perfil-github.git
+cd buscador-perfil-github
+python -m http.server 8000
+```
 
-Clone ou faça o download do projeto:
+Depois abra http://localhost:8000. No VS Code, a extensão Live Server também serve.
 
-git clone https://github.com/seu-usuario/Buscador-GitHub.git
+## Próximos passos
 
+- Cadastrar uma lista de exercícios (enunciados e casos de teste).
+- Escolher o repositório e os arquivos de cada aluno para a lista.
+- Rodar os testes e gerar a correção comentada, usando as linhas marcadas no código.
 
-Abra o arquivo index.html em qualquer navegador moderno.
+## Tecnologias
 
-Digite o nome de usuário do GitHub que deseja buscar e clique em "Buscar".
-
-Visualize o perfil retornado com todas as informações do usuário.
-
-🎨 Design
-
-Layout centralizado com formulário no topo e resultados exibidos abaixo.
-
-Cores: Fundo escuro com destaques em tons de roxo e azul neon.
-
-Tipografia: Legível e moderna, com destaque para títulos e informações-chave.
-
-Interatividade: Feedback de carregamento, erros e animação de neon no avatar.
-
-🔧 Personalização
-
-Você pode personalizar este projeto alterando:
-
-Cores, fontes e efeitos no CSS
-
-Adicionar novos campos retornados pela API do GitHub (como localização, empresa, website)
-
-Melhorar a responsividade para telas muito pequenas
+HTML, CSS e JavaScript puro (módulos ES), API REST do GitHub, highlight.js, marked e DOMPurify.

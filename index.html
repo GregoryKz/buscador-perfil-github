@@ -1,32 +1,67 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Exemplo de barra de navegação com Flexbox e notificações">
-    <meta name="keywords" content="barra, navegação, flexbox, HTML, CSS, notificações">
-    <meta name="robots" content="index, follow">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Busque um usuário do GitHub pelo login ou pelo nome, veja o perfil e os repositórios, leia o código e baixe os projetos em ZIP.">
     <meta name="author" content="Gregory Klaus">
-    <title>Buscador de Perfis do GitHub</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <meta name="theme-color" content="#E6EAEE">
+    <title>Buscador de perfis do GitHub</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2317212C'/%3E%3Cpath d='M9 22l5-5-5-5M16 22h7' stroke='%23E2324A' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="preload" href="assets/fonts/schibsted-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/schibsted-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
-<div class="container">
+<body data-view="home">
+    <a class="skip" href="#main">Pular para o conteúdo</a>
 
-    <header>
-        <h1>Buscador de Perfis do GitHub</h1>
-
-        <form id="search-form">
-            <input type="text" id="search-input" placeholder="Digite um usuário..." autocomplete="off" required>
-            <button type="submit">Buscar</button>
-        </form>
+    <header class="topbar">
+        <a class="brand" href="#/" aria-label="Buscador de perfis do GitHub, voltar para a busca">
+            <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M9 22l5-5-5-5M16 22h7" stroke="var(--pen)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Buscador de perfis</span>
+        </a>
+        <div class="topbar__search" id="top-search"></div>
+        <div class="topbar__end">
+            <span class="rate" id="rate" hidden></span>
+            <button class="btn btn--sm" type="button" id="token-btn" aria-haspopup="dialog">
+                <svg class="ico" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="11" r="2.8"/><path d="M7 9l6.5-6.5M11.5 4.5l1.5 1.5M10 6l1.2 1.2"/></svg>
+                <span>Token</span>
+            </button>
+        </div>
     </header>
 
-    <main id="profile-container"></main>
+    <main id="main" tabindex="-1"></main>
 
-</div>
+    <footer class="footer">
+        <p>Dados públicos da API do GitHub. Projeto de <a href="https://github.com/gregorykz" target="_blank" rel="noopener">Gregory Klaus</a>.</p>
+    </footer>
 
-<script src="assets/script.js"></script>
+    <dialog class="dialog" id="token-dialog" aria-labelledby="token-title">
+        <form method="dialog">
+            <h2 id="token-title">Token pessoal do GitHub</h2>
+            <p>Sem token, o GitHub libera 60 consultas por hora para a sua rede. Com um token, são 5.000 por hora, o que dá para conferir a turma inteira.</p>
+            <ol class="dialog__steps">
+                <li><a href="https://github.com/settings/tokens/new?description=Buscador%20de%20perfis" target="_blank" rel="noopener">Crie um token clássico</a> sem marcar nenhuma permissão.</li>
+                <li>Cole o token abaixo e salve.</li>
+            </ol>
+            <label class="field field--block" for="token-input">
+                <span>Token</span>
+                <input id="token-input" type="password" autocomplete="off" spellcheck="false" placeholder="ghp_…">
+            </label>
+            <p class="dialog__note">O token fica salvo só neste navegador e é enviado apenas para api.github.com.</p>
+            <div class="dialog__actions">
+                <button class="btn btn--pen" value="save">Salvar token</button>
+                <button class="btn" value="remove">Remover</button>
+                <button class="btn btn--ghost" type="button" onclick="this.closest('dialog').close('cancel')">Cancelar</button>
+            </div>
+        </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="assets/vendor/highlight.min.js" defer></script>
+    <script src="assets/vendor/marked.min.js" defer></script>
+    <script src="assets/vendor/purify.min.js" defer></script>
+    <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
